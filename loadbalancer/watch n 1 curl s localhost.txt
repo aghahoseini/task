@@ -1,3 +1,0 @@
- watch -n 1 curl -s localhost:9999
- 
- docker compose logs -f server-1

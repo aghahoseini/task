@@ -1,5 +1,5 @@
 services:
-  ubuntu58:
+  multi-service:
     build:
       dockerfile: ./Dockerfile
     ports: 

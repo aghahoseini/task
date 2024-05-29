@@ -16,7 +16,6 @@ services:
     image: mariadb:10.11.6
     environment:
       - MYSQL_DATABASE=testdb
-      #- MYSQL_ROOT_PASSWORD=testpass
       - MYSQL_ALLOW_EMPTY_PASSWORD=1
     ports:
       - "3306:3306"

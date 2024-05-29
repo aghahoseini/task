@@ -1,0 +1,1 @@
+ mysql -h 10.5.0.6 -P 3306 --protocol=tcp -u root -p

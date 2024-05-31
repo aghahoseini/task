@@ -1,0 +1,41 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports: 
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/app
+   
+  phpfpm:
+    build:
+      dockerfile: ./php/Dockerfile
+    environment:
+      - mysql_host=${MYSQL_SERVICE_NAME}
+      - mysql_user=${MYSQL_USER}
+      - mysql_port=${MYSQL_PORT}
+      - mysql_db=${MYSQL_DB}
+      - mysql_user_pass=${MYSQL_USER_PASS}
+    volumes:
+      - ./app:/app
+
+  ${MYSQL_SERVICE_NAME}:
+    build:
+      dockerfile: ./mysql/Dockerfile
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_USER_PASS}
+    ports:
+      - "8081:3306"
+
+
+  phpmyadmin:
+    depends_on:
+      - ${MYSQL_SERVICE_NAME}
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: ${MYSQL_SERVICE_NAME}
+      MYSQL_ROOT_PASSWORD: password

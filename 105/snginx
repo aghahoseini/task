@@ -1,0 +1,41 @@
+#!/bin/bash
+
+echo 'hi'; 
+
+
+#crontab -l | { cat; echo "0 */72 * * * touch /home/hosein/test/a.txt"; } | crontab -
+
+file_path=/var/log/nginx/access.log;
+file_name="access_$(date +%F).log.tar";
+path=/var/log/nginx; #tahesh / nazar
+#tar -cfv "${file_name} $file_path";
+#tar -cfv  a.tar /var/log/nginx/access.log;
+#tar -cvf  $path/$file_name $file_path;  #-cvf vs -cfv  fargh daran  ; avali doroste
+
+
+
+#if [ -n "$(find ${file_path} -size +200M)" ]; then
+if [ -n "$(find ${file_path} -size +1k)" ]; then
+    printf '%s is strictly larger than 100kb\n' "$file_path";
+
+    #cp $file_path $path/$file_name;
+    #echo "" > $file_path;
+
+
+    #tar -cvf  $path/$file_name $file_path;
+
+    touch "$path/$file_name";
+    
+    tar -cvf  "$path/$file_name" $file_path;
+    echo "" > $file_path;
+    #rm -rf $file_path;
+   # touch $file_path;
+    #kill -HUP `cat /var/run/nginx.pid`
+
+    #tar -xf a.log.tar --dir b.log
+
+fi
+
+
+
+

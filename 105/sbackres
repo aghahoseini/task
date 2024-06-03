@@ -1,0 +1,185 @@
+#!/bin/bash
+
+
+dir_should_be_backuped_path=/;
+dir_should_be_backuped_name=temp
+where_saved_backup=/home/hosein/backup;
+#tarfile_name="etc000$(date +%F%T)";
+backup_file_name="etc-$(date +%F%T)";
+
+
+#crontab -l | { cat; echo "*/1 * * * * touch /home/hosein/test/a.txt"; } | crontab -
+
+
+
+function backup {
+  echo " i am function for backup" ;
+  printf "option backup used \n"
+      printf "creating archive ...... \n> "
+
+      #tar -cvf  a.tar /etc > /dev/null;
+
+      mkdir -p $where_saved_backup;
+      cd $dir_should_be_backuped_path && tar -cvf  $where_saved_backup/$backup_file_name.tar $dir_should_be_backuped_name >/dev/null 2>&1;
+      
+
+      if [ $? -eq 0 ]; then
+	      echo “create archive step successfully done”;
+        echo "backup $backup_file_name is created and stored in $where_saved_backup";
+        
+      else
+        echo 'create archive step failed | please contact admin' 
+        exit
+      fi
+
+
+      printf "compressing $where_saved_backup/$backup_file_name.tar' ...... \n> "
+      gzip  $where_saved_backup/$backup_file_name.tar;
+      echo -n "secret" | openssl aes-256-cbc -a -salt -pbkdf2 -in $where_saved_backup/$backup_file_name.tar.gz -out "$where_saved_backup/$backup_file_name.tar.gz.enc"   -pass stdin
+      rm -rf $where_saved_backup/$backup_file_name.tar.gz ;
+
+
+      echo "successfuly backup file created from $dir_should_be_backuped_path$dir_should_be_backuped_name  and backup file saved in $where_saved_backup with name of $backup_file_name ";
+
+}
+
+
+
+function restore {
+  echo " i am function for restore" ;
+
+        
+      printf "option restore used \n\n"
+     
+
+
+
+      if [ -n "$(ls -A $where_saved_backup 2>/dev/null)" ]
+      then
+        printf "available backups to restore \n\n"
+        b=$(ls $where_saved_backup );
+        echo "$b \n\n"
+        printf "please select one of them (enter one of them name ) :> "
+
+        read selected_backup_file;
+        
+
+        
+        if [ -e "$where_saved_backup/$selected_backup_file" ]; then
+          
+         
+          echo '*************************';
+
+
+
+
+
+          echo "extracting $selected_backup_file  to  ./  ......";
+
+          echo -n "secret" | openssl aes-256-cbc -d -a -pbkdf2 -in "$where_saved_backup/$selected_backup_file" -out ${selected_backup_file%.*}  -pass stdin
+          
+          gzip -d ${selected_backup_file%.*} 
+
+          tar -xf "./${selected_backup_file%.gz*}"  --dir ./
+
+
+          if [ $? -eq 0 ]; then
+	          echo “extracting backup  successfully done”
+          else
+            echo 'extracting backup failed | please contact admin' 
+            exit
+          fi
+
+
+
+
+          echo " restore process started "
+          rsync -a "./$dir_should_be_backuped_name/" "$dir_should_be_backuped_path$dir_should_be_backuped_name" --delete
+
+          rm -rf "./${selected_backup_file%.gz*}" ;
+          rm -rf "./$dir_should_be_backuped_name" ;
+
+
+          if [ $? -eq 0 ]; then
+	          echo “restoring backup  successfully done”
+          else
+            echo 'restoring backup failed | please contact admin' 
+            exit
+          fi
+
+
+
+
+
+          
+
+        else 
+          echo "you enter a backupfile that dont exist at all"
+          exit
+        fi 
+
+        
+      else
+        echo "there is no backupfile to  restore to it "
+        exit
+      fi
+
+
+
+
+}
+
+
+
+
+
+
+
+
+if [[ $1 == "" ]] #Where "$1" is the positional argument you want to validate 
+
+ then
+  echo "interactive mode activated "
+  printf "do you want get backup or restore ? (b for backup . r for restore) \n\n"
+  read action;
+
+  
+
+  if [ $action == 'b' ] || [ $action == 'r' ]; then
+    if [ $action == 'b' ]; then echo 'backup selected' 
+      backup;
+    fi 
+    if [ $action == 'r' ]; then echo 'restore selected' 
+      restore;
+    fi 
+  else
+    echo “invalid option passed”
+  fi
+
+
+fi
+
+
+
+
+
+while getopts :br OPT; do
+  case "$OPT" in
+    b)
+
+      backup
+      
+
+      ;;
+    r)
+
+      restore
+
+      ;;
+    ?)
+      echo " option invalid ${OPTARG} "
+      ;;
+  esac
+done
+
+

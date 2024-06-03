@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo 'hi'; 
+
+
+file_name="test_$(date +%F%T).sql";
+
+
+
+mysqldump --user=root --password=Jafarlar5# msn > $file_name;
+
+
+gzip  $file_name;
+
+file_name="${file_name}.gz"
+
+echo -n "secret" | openssl aes-256-cbc -a -salt -pbkdf2 -in $file_name -out "${file_name}.enc"   -pass stdin
+
+rm -rf $file_name
+
+
+mkdir -p /home/hosein/dbbackup/"$(date +%F).database_backup"/ ; mv $file_name.enc $_

@@ -124,7 +124,9 @@ else
 fi
 
 
-
+#testfile
+#echo -n "secret" | openssl aes-256-cbc -d -a -pbkdf2 -in test_2024-06-0216\:01\:18.sql.gz.enc -out test_2024-06-0216\:01\:18new.sql.gz  -pass stdin
+#gzip -dk test_2024-06-0216\:01\:18new.sql.gz 
 
 
 

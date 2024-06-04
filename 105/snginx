@@ -39,7 +39,7 @@ log "------Backup-$(date +%d-%m-%Y-%H%M%S)------"
 
 #check target file exist or not
 if [ -e "$TARGET_FILE_PATH/$TARGET_FILE_NAME" ]; then
-    log "target file for backup exist we can edame the process"
+    log "target file for backup exist we can continue the process"
 else 
     log "target file dont exist"
     exit;

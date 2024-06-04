@@ -7,7 +7,7 @@ echo 'hi';
 
 file_path=/var/log/nginx/access.log;
 file_name="access_$(date +%F).log.tar";
-path=/var/log/nginx; #tahesh / nazar
+path=/var/log/nginx; 
 #tar -cfv "${file_name} $file_path";
 #tar -cfv  a.tar /var/log/nginx/access.log;
 #tar -cvf  $path/$file_name $file_path;  #-cvf vs -cfv  fargh daran  ; avali doroste

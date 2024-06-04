@@ -7,7 +7,7 @@ file_name="test_$(date +%F%T).sql";
 
 
 
-mysqldump --user=root --password=Jafarlar5# msn > $file_name;
+mysqldump --user=root --password=1235# msn > $file_name;
 
 
 gzip  $file_name;

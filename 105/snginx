@@ -6,7 +6,7 @@
 # version:      1.0
 # createTime:   2024-06-04
 # description:  if /var/log/access.log file exceed 200Mb . archive it
-# author:       muedsa
+# author:       hosein aghahoseini
 # ----------------------------------------------------------------------
 
 

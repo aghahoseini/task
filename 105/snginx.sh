@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------
 
 
-
+#crontab -l | { cat; echo "0 */72 * * * touch /home/hosein/test/a.txt"; } | crontab -
 
 
 TARGET_FILE="/var/log/nginx/access.log"

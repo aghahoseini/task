@@ -22,7 +22,7 @@ log "-------$(date +%d-%m-%Y-%H%M%S)------"
 
 
 function backup {
-  log " i am function for backup" ;
+
   log "option backup used \n"
       log "creating archive ...... \n> "
 
@@ -103,7 +103,9 @@ function restore {
           
 
           log " restore process started "
-          rsync -a "./$dir_should_be_backuped_name/" "$dir_should_be_backuped_path$dir_should_be_backuped_name" --delete
+          from="./$dir_should_be_backuped_name/";
+          to="$dir_should_be_backuped_path$dir_should_be_backuped_name";
+          rsync -a $from $to --delete
 
           rm -rf "./${selected_backup_file%.gz*}" ;
           rm -rf "./$dir_should_be_backuped_name" ;

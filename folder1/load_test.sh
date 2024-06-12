@@ -47,6 +47,22 @@ do
             ((two_xx++));
         ;;
 
+
+        3)
+            ((three_xx++));
+        ;;
+
+
+        4)
+            ((four_xx++));
+        ;;
+
+
+        5)
+            ((five_xx++));
+        ;;
+
+
         *)
              ((other++));
         ;;
@@ -100,4 +116,7 @@ printf 'number of requests routed to server2 = %s \n' "$replica_2"
 printf 'number of requests routed to server3 = %s \n' "$replica_3"
 printf 'number of requests routed to server4 = %s \n' "$replica_4"
 printf 'number of requests routed to server5 = %s \n' "$replica_5"
+
+
+
 

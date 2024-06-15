@@ -54,7 +54,7 @@ services:
 
 secrets:
   db_root_password:
-    file: /home/hosein/Desktop/galera3/mnm/db_root_password.txt
+    file: /home/hosein/Desktop/galera3/secrets/db_root_password.txt
 
 
 networks:

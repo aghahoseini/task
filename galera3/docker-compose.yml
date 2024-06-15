@@ -1,6 +1,7 @@
 services:
   node1:
-    image: mydomain/galera
+    build:
+      dockerfile: ./Dockerfile
     hostname: node1
     secrets:
       - db_root_password
@@ -20,7 +21,8 @@ services:
 
 
   node2:
-    image: mydomain/galera
+    build:
+      dockerfile: ./Dockerfile
     hostname: node2
     secrets:
       - db_root_password

@@ -1,0 +1,65 @@
+services:
+  node1:
+    image: mydomain/galera
+    hostname: node1
+    secrets:
+      - db_root_password
+    stdin_open: true 
+    tty: true
+    environment:
+       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+       GALERA_NEW_CLUSTER: 1
+    ports: 
+      - "3311:3306"
+    volumes:
+      - ./node1.cnf:/etc/mysql/conf.d/galera.cnf
+    networks:
+      anetwork:
+        ipv4_address: 10.5.0.5
+
+
+
+  node2:
+    image: mydomain/galera
+    hostname: node2
+    secrets:
+      - db_root_password
+    stdin_open: true 
+    tty: true
+    environment:
+       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    ports: 
+      - "3312:3306"
+    volumes:
+      - ./node2.cnf:/etc/mysql/conf.d/galera.cnf
+    networks:
+      anetwork:
+        ipv4_address: 10.5.0.6
+
+
+  nginx:
+    image: nginx
+    ports:
+      - 9999:80
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+    networks:
+      anetwork:
+        ipv4_address: 10.5.0.7
+
+
+
+
+secrets:
+  db_root_password:
+    file: /home/hosein/Desktop/galera3/mnm/db_root_password.txt
+
+
+networks:
+  anetwork:
+     driver: bridge
+     ipam:
+       config:
+         - subnet: 10.5.0.0/16
+
+

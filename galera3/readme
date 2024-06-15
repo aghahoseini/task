@@ -1,0 +1,70 @@
+
+#two way to connect to node
+mysql -h 10.5.0.5 -P 3306 -u root -psecret_galera_password
+
+mysql -h 127.0.0.1 -P 3311 -u root -psecret_galera_password
+
+
+#test load balancer
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.7 -e "SHOW VARIABLES WHERE Variable_name = 'hostname';"
+
+
+#see cluster size
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.5 -e "SHOW STATUS LIKE 'wsrep_cluster_size'"
+
+
+#test galera cluster 
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.5 -e 'CREATE DATABASE playground;CREATE TABLE playground.equipment ( id INT NOT NULL AUTO_INCREMENT, type VARCHAR(50), quant INT, color VARCHAR(25), PRIMARY KEY(id));'
+
+
+
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.5 -e 'INSERT INTO playground.equipment (type, quant, color) VALUES ("created in node1", 2, "blue");'
+
+
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.6 -e 'INSERT INTO playground.equipment (type, quant, color) VALUES ("created in node2", 2, "blue");'
+
+
+
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.6 -e 'select * from playground.equipment'
+
+
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.5 -e 'select * from playground.equipment'
+
+////////////////////////////////////////////////////////////////////////////
+
+mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.7 -e "SHOW STATUS LIKE 'wsrep_cluster_size'"
+
+
+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
+git remote add origin https://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@github.com/aghahoseini/task.git
+https://github.com/aghahoseini/task.git
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+docker build -t mydomain/galera .
+
+
+ docker network create --subnet 10.5.0.0/16 galera
+
+
+ docker run -d --restart=unless-stopped --net galera \
+        --name node1 -h node1 --ip 10.5.0.5 \
+        -p 3311:3306 \
+        -v ./node1.cnf:/etc/mysql/conf.d/galera.cnf \
+        -e MYSQL_ROOT_PASSWORD=secret_galera_password \
+        -e GALERA_NEW_CLUSTER=1 \
+        mydomain/galera
+
+
+docker run -d --restart=unless-stopped --net galera \
+        --name node2 -h node2 --ip 10.5.0.6 \
+        -p 3312:3306 \
+        -v ./node2.cnf:/etc/mysql/conf.d/galera.cnf \
+        -e MYSQL_ROOT_PASSWORD=secret_galera_password \
+        mydomain/galera
+
+////////////////////////////////////////////////////////////////////////////////
+
+docker rm -f node2  node1 

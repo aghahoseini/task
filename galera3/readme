@@ -30,3 +30,12 @@ mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.6 -e 'select * from p
 
 mysql -u root -P 3306 -psecret_galera_password   -h 10.5.0.5 -e 'select * from playground.equipment'
 
+MariaDB [(none)]> show global status where Variable_name IN('wsrep_cluster_size', 'wsrep_cluster_status', 'wsrep_incoming_addresses');
++--------------------------+-------------------------------------+
+| Variable_name            | Value                               |
++--------------------------+-------------------------------------+
+| wsrep_incoming_addresses | 172.31.25.43:3306,172.31.25.44:3306 |
+| wsrep_cluster_size       | 2                                   |
+| wsrep_cluster_status     | Primary                             |
++--------------------------+-------------------------------------+
+3 rows in set (0.00 sec)
